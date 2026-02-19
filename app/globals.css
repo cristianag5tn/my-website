@@ -1,26 +1,46 @@
 @import "tailwindcss";
 
+/* =========================
+   COLOR TOKENS (Tailwind)
+========================= */
+
+@theme {
+  --color-background-900: #0A0B08;
+
+  --color-foreground-50: #ffffff;
+  --color-foreground-300: #dcdcdc;
+  --color-foreground-500: #999999;
+
+  --color-primary-600: #00d57b;
+  --color-primary-300: #30f3af;
+  --color-primary-100: #bbfadd;
+
+  --color-surface-900: #171914;
+  --color-surface-800: #373934;
+}
+
+/* =========================
+   TYPOGRAPHY TOKENS (Global CSS)
+========================= */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  --font-h1: 72px;
+  --font-h2: 40px;
+  --font-h2-bold: 40px;
+  --font-h3: 32px;
+  --font-h3-semibold: 32px;
+  --font-h4: 24px;
+  --font-h5: 20px;
+  --font-h5-regular: 20px;
+  --font-h6: 17px;
+  --font-h6-semibold: 17px;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-subtitle-1: 20px;
+  --font-subtitle-2: 17px;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+  --font-body-1: 20px;
+  --font-body-2: 17px;
+  --font-body-3: 15px;
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  --font-button: 20px;
 }
