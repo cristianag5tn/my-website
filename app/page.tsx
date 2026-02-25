@@ -1,3 +1,7 @@
+"use client"
+
+import { useState } from "react"
+
 import Section from "@/components/layout/Section";
 import Container from "@/components/layout/Container";
 import Columns from "@/components/layout/Columns";
@@ -472,61 +476,61 @@ export default function Home() {
 
 
             {/* ================= EXPERIENCES ORNAMENTAL ================= */}
-<section className="relative py-64 overflow-hidden text-center bg-[var(--color-surface-900)]">
+<section className="relative py-40 bg-[var(--color-surface-900)] overflow-hidden">
 
-  {/* Top Arc Line */}
-  <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[1400px] h-[600px] border-t border-white/10 rounded-[50%] pointer-events-none" />
+  {/* soft top blend */}
+  <div className="absolute top-0 left-0 right-0 h-32 
+    bg-gradient-to-b from-[var(--color-surface-900)] 
+    to-transparent pointer-events-none" />
 
-  {/* Ornamental Background */}
+  {/* Ornamental PNG (Decorative Only) */}
   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+
     <img
-      src="/ornament.png"   // ⬅️ GANTI dengan image ornamental khusus
-      alt=""
-      className="w-[900px] opacity-20"
-    />
+  src="/experiences-ornament.png"
+  alt=""
+  className="
+    w-[80%]
+    max-w-[1100px]
+    object-contain
+    opacity-95
+    -translate-y-4
+  "
+/>
+
   </div>
 
-  {/* Dark Fade Overlay */}
-  <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black opacity-70 pointer-events-none" />
+  {/* Content */}
+  <div className="relative z-10 max-w-[1100px] mx-auto px-6 text-center">
 
-  <div className="relative z-10 max-w-[1100px] mx-auto px-6">
-
-    {/* Top Pills */}
-    <div className="flex justify-center gap-4 mb-20 flex-wrap">
+    {/* Top Chips */}
+    <div className="flex justify-center gap-4 flex-wrap mb-12">
       {["Bootcamps", "Workshops", "Courses", "Accelerators"].map((item) => (
-        <div
+        <span
           key={item}
-          className="px-7 py-3 rounded-full text-sm"
-          style={{
-            background: "rgba(20,20,20,0.75)",
-            border: "1px solid rgba(255,255,255,0.08)",
-          }}
+          className="px-6 py-2 rounded-full border border-white/20 text-sm text-white/80 bg-black/60"
         >
           {item}
-        </div>
+        </span>
       ))}
     </div>
 
-    {/* Heading */}
-    <h2 className="text-6xl font-semibold leading-tight mb-20">
+    {/* Headline */}
+    <h4 className="text-5xl md:text-6xl font-semibold tracking-tight leading-[1.1] text-white mb-14">
       Experiences we build
       <br />
       with you
-    </h2>
+    </h4>
 
-    {/* Bottom Pills */}
+    {/* Bottom Chips */}
     <div className="flex justify-center gap-4 flex-wrap">
       {["Subscriptions", "Communities", "Fellowships"].map((item) => (
-        <div
+        <span
           key={item}
-          className="px-7 py-3 rounded-full text-sm"
-          style={{
-            background: "rgba(20,20,20,0.75)",
-            border: "1px solid rgba(255,255,255,0.08)",
-          }}
+          className="px-6 py-2 rounded-full border border-white/20 text-sm text-white/80 bg-black/60"
         >
           {item}
-        </div>
+        </span>
       ))}
     </div>
 
@@ -536,212 +540,261 @@ export default function Home() {
 
 
 {/* ================= STACKED CASE STUDIES ================= */}
-<section className="relative py-40 bg-[var(--color-surface-900)] overflow-hidden">
 
-  {/* Heading */}
-  <div className="text-center mb-20 max-w-[760px] mx-auto px-6">
-    <h2 className="text-4xl md:text-5xl font-semibold leading-tight">
-      Category defining programs,
-      <br />
-      built to world-class standards
-    </h2>
-  </div>
+{(() => {
 
-  {/* STACK WRAPPER — width sudah diperkecil supaya tidak melewati vertical line */}
-  <div className="relative max-w-[960px] mx-auto px-6 h-[460px]">
+  const caseStudies = [
+    {
+      id: 0,
+      label: "Maven",
+      title: "First Cohort Based Courses on Maven",
+      desc: "Helped define the cohort-based learning model on Maven, shaping how experts turned knowledge into structured, high-impact programs.",
+      image: "/hero.jpg",
+    },
+    {
+      id: 1,
+      label: "On Deck",
+      title: "Founder Fellowship Programs",
+      desc: "Designed and scaled community-driven fellowships for ambitious founders building category-defining companies.",
+      image: "/hero.jpg",
+    },
+    {
+      id: 2,
+      label: "Thinkful",
+      title: "Scaled Global Bootcamps",
+      desc: "Expanded high-impact bootcamps across markets, aligning curriculum, outcomes, and employer pipelines.",
+      image: "/hero.jpg",
+    },
+    {
+      id: 3,
+      label: "Private Client",
+      title: "Executive Learning Accelerators",
+      desc: "Created premium accelerator programs for senior operators transitioning into new leadership domains.",
+      image: "/hero.jpg",
+    },
+  ]
 
-    {[0,1,2,3].map((i) => {
+  const [activeIndex, setActiveIndex] = useState(3)
 
-      const offset = i * 28;
+  const total = caseStudies.length
+  const offset = 78
+  const totalOffset = offset * (total - 1)
 
-      return (
-        <div
-          key={i}
-          className="absolute w-full h-full rounded-3xl overflow-hidden grid grid-cols-12"
-          style={{
-            top: offset,
-            left: offset,
-            zIndex: 10 + i,
-            background: "#121212",
-            border: "1px solid rgba(255,255,255,0.06)",
-            boxShadow:
-              i === 3
-                ? "0 50px 140px rgba(0,0,0,0.9)"
-                : "0 30px 80px rgba(0,0,0,0.6)",
-          }}
-        >
+  return (
 
-          {/* LEFT COPY */}
-          <div className="col-span-12 md:col-span-6 p-10 flex flex-col justify-center">
+    <section className="relative py-40 bg-[var(--color-surface-900)] overflow-hidden">
 
-            <div className="text-sm text-white/50 mb-4">
-              Maven
-            </div>
+      {/* Heading */}
+      <div className="text-center mb-24 max-w-[760px] mx-auto px-6">
+        <h2 className="text-[32px] md:text-[38px] font-medium leading-tight text-white/90">
+          Category defining programs,
+          <br />
+          built to world-class standards
+        </h2>
+      </div>
 
-            <div className="text-2xl font-semibold mb-6 text-white leading-snug">
-              First Cohort Based Courses on Maven
-            </div>
+      {/* ================= STACK WRAPPER ================= */}
+<div className="relative max-w-[1120px] mx-auto h-[460px]">
 
-            <div className="text-white/70 leading-relaxed">
-              Helped define the cohort-based learning model on Maven,
-              shaping how experts turned knowledge into structured,
-              high-impact programs.
-            </div>
+  {caseStudies.map((item, i) => {
 
+    const order = (i - activeIndex + total) % total
+    const indexFromFront = total - 1 - order
+    const isFront = indexFromFront === 0
+
+    return (
+      <div
+        key={item.id}
+        onClick={() => setActiveIndex(i)}
+        className="absolute top-0 right-0 rounded-3xl overflow-hidden grid grid-cols-12 cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+        style={{
+          width: `calc(100% - ${totalOffset}px)`,
+          height: "100%",
+          transform: `translateX(-${indexFromFront * offset}px)`,
+          zIndex: 10 + order,
+          background: "#0F0F0F",
+          border: "1px solid rgba(255,255,255,0.05)",
+          boxShadow: isFront
+            ? "0 20px 50px rgba(0,0,0,0.45)"
+            : "none",
+        }}
+      >
+
+        {/* LEFT COPY */}
+        <div className="col-span-6 px-14 py-14 flex flex-col justify-center bg-[#0F0F0F]">
+
+          <div className="text-xs text-white/30 mb-6 tracking-[0.25em] uppercase">
+            {item.label}
           </div>
 
-          {/* RIGHT IMAGE */}
-          <div className="col-span-12 md:col-span-6 relative">
+          <div className="text-[22px] font-semibold mb-5 text-white leading-snug">
+            {item.title}
+          </div>
+
+          <div className="text-white/60 leading-relaxed text-sm max-w-[380px]">
+            {item.desc}
+          </div>
+
+        </div>
+
+        {/* RIGHT IMAGE */}
+        <div className="col-span-6 relative p-8 flex items-center bg-[#0F0F0F]">
+
+          <div className="relative w-full h-full rounded-2xl overflow-hidden">
 
             <img
-              src="/hero.jpg"
+              src={item.image}
               alt=""
               className="w-full h-full object-cover"
             />
 
-            {/* Subtle inner gradient supaya transisi ke copy lebih halus */}
-            <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-[#121212]/70" />
+            <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-[#0F0F0F]/90" />
 
           </div>
 
         </div>
-      );
-    })}
 
-  </div>
+      </div>
+    )
+  })}
 
-</section>
+</div>
+
+    </section>
+  )
+})()}
 
 
 {/* ================= PROGRAM TRANSFORMATION ================= */}
-<section className="relative py-56 overflow-hidden">
+<section className="relative py-32 bg-[var(--color-surface-900)]">
 
-  {/* Background Image */}
-  <div className="absolute inset-0">
-    <img
-      src="/hero.jpg"
-      alt=""
-      className="w-full h-full object-cover scale-110"
-    />
-  </div>
+  <div className="max-w-[1200px] mx-auto px-6">
 
-  {/* Dark Vertical Gradient */}
-  <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/90" />
+    {/* IMAGE PANEL (DI DALAM GUIDELINE) */}
+    <div className="relative min-h-[950px] overflow-hidden rounded-b-[24px]">
 
-  {/* Radial Focus Glow */}
-  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(255,255,255,0.06),transparent_60%)]" />
+      {/* IMAGE */}
+      <img
+        src="program_transformation.jpg"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover"
+      />
 
-  {/* Content */}
-  <div className="relative z-10 max-w-[1000px] mx-auto px-6 text-center">
+      {/* TOP GRADIENT ONLY */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-transparent" />
 
-    {/* Small Eyebrow */}
-    <div className="mb-6 text-sm text-white/60">
-      Programs That Deliver
-    </div>
+      {/* ================= CONTENT ================= */}
+      <div className="relative z-10 pt-28 text-center max-w-[900px] mx-auto">
 
-    <div
-      className="text-base font-medium mb-10"
-      style={{ color: "var(--color-primary-600)" }}
-    >
-      Life Changing Transformations
-    </div>
-
-    {/* Main Headline */}
-    <h2 className="text-4xl md:text-5xl font-semibold leading-tight mb-20 max-w-[820px] mx-auto">
-      We don’t just optimize for outcomes.
-      <br />
-      <span className="text-white/70">
-        We design programs that change how people see
-        themselves and what they believe they can do next.
-      </span>
-    </h2>
-
-    {/* TESTIMONIAL CARDS */}
-    <div className="grid md:grid-cols-2 gap-10 mt-10">
-
-      {/* CARD 1 */}
-      <div
-        className="p-8 rounded-3xl backdrop-blur-xl text-left"
-        style={{
-          background: "rgba(20,20,20,0.75)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          boxShadow: "0 40px 120px rgba(0,0,0,0.8)",
-        }}
-      >
-        <div className="text-white/80 leading-relaxed mb-8">
-          Before the program, I always felt like I was catching up,
-          like everyone else had a playbook I missed. Halfway through,
-          that feeling disappeared. I stopped asking whether I belonged
-          here and started acting like I did.
+        <div className="text-sm text-white/60 mb-3">
+          Programs That Deliver
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-white/20" />
-          <div>
-            <div
-              className="font-semibold"
-              style={{ color: "var(--color-primary-600)" }}
-            >
-              Jessica Blund
-            </div>
-            <div className="text-sm text-white/50">
-              Program participant
-            </div>
-          </div>
+        <div
+          className="text-sm font-medium mb-12"
+          style={{ color: "var(--color-primary-600)" }}
+        >
+          Life Changing Transformations
+        </div>
+
+        <h2 className="text-[36px] md:text-[46px] font-medium leading-[1.2] text-white/90">
+          We don’t just optimize for outcomes.
+          <br />
+          <span className="text-white/65">
+            We design programs that change how people see themselves
+            and what they believe they can do next.
+          </span>
+        </h2>
+      </div>
+
+      {/* ================= TESTIMONIAL FLOAT ================= */}
+      <div className="absolute bottom-16 left-0 right-0 z-10 overflow-hidden">
+
+        <div className="flex gap-10 px-12 animate-marquee">
+
+          {[
+            {
+              text: "Before the program, I always felt like I was catching up. Halfway through, that feeling disappeared.",
+              name: "Jessica Blund",
+              role: "Program participant",
+            },
+            {
+              text: "I learned how to make decisions with confidence and trust my own judgment.",
+              name: "Steward Angle",
+              role: "Early-career operator",
+            },
+            {
+              text: "The shift wasn’t just tactical. It was identity-level.",
+              name: "Mason Lee",
+              role: "Founder",
+            },
+          ]
+            .concat([
+              {
+                text: "Before the program, I always felt like I was catching up. Halfway through, that feeling disappeared.",
+                name: "Jessica Blund",
+                role: "Program participant",
+              },
+              {
+                text: "I learned how to make decisions with confidence and trust my own judgment.",
+                name: "Steward Angle",
+                role: "Early-career operator",
+              },
+              {
+                text: "The shift wasn’t just tactical. It was identity-level.",
+                name: "Mason Lee",
+                role: "Founder",
+              },
+            ])
+            .map((item, index) => (
+              <div
+                key={index}
+                className="min-w-[380px] max-w-[380px] p-8 rounded-[24px]"
+                style={{
+                  background: "rgba(18,18,18,0.72)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  boxShadow: "0 20px 50px rgba(0,0,0,0.45)",
+                }}
+              >
+                <div className="text-white/80 leading-relaxed mb-6 text-[14px]">
+                  {item.text}
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-white/20" />
+                  <div>
+                    <div
+                      className="font-semibold text-sm"
+                      style={{ color: "var(--color-primary-600)" }}
+                    >
+                      {item.name}
+                    </div>
+                    <div className="text-xs text-white/50">
+                      {item.role}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+
         </div>
       </div>
 
-      {/* CARD 2 */}
-      <div
-        className="p-8 rounded-3xl backdrop-blur-xl text-left"
-        style={{
-          background: "rgba(20,20,20,0.75)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          boxShadow: "0 40px 120px rgba(0,0,0,0.8)",
-        }}
-      >
-        <div className="text-white/80 leading-relaxed mb-8">
-          I didn’t just learn new concepts. I learned how to make
-          decisions with confidence. For the first time, I wasn’t
-          waiting for permission or validation. I trusted my own
-          judgment.
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-white/20" />
-          <div>
-            <div
-              className="font-semibold"
-              style={{ color: "var(--color-primary-600)" }}
-            >
-              Steward Angle
-            </div>
-            <div className="text-sm text-white/50">
-              Early-career operator
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
-
-  {/* Bottom Fade Melt */}
-  <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[var(--color-surface-900)] to-transparent" />
-
 </section>
 
 
 {/* ================= FULL STACK / MODULAR ================= */}
-<section className="relative py-40 bg-[var(--color-surface-900)] overflow-hidden">
+<section className="relative py-36 bg-[var(--color-surface-900)] overflow-hidden">
 
-  <div className="max-w-[1000px] mx-auto px-6">
+  <div className="max-w-[1100px] mx-auto px-6">
 
-    {/* TOP TEXT */}
-    <div className="grid md:grid-cols-2 gap-16 mb-24 items-start">
+    {/* ================= TOP TEXT ================= */}
+    <div className="grid md:grid-cols-2 gap-20 mb-24 items-start">
 
       <div>
-        <h2 className="text-4xl md:text-5xl font-semibold leading-tight">
+        <h2 className="text-[44px] md:text-[54px] font-medium leading-[1.05] text-white/90">
           Full-stack or Modular.
           <br />
           <span style={{ color: "var(--color-primary-600)" }}>
@@ -750,92 +803,187 @@ export default function Home() {
         </h2>
       </div>
 
-      <div className="text-white/70 leading-relaxed text-lg">
+      <div className="text-white/60 leading-relaxed text-[18px] max-w-[440px]">
         We can own strategy & execution end-to-end OR partner
         with your team on where guidance is most needed.
       </div>
 
     </div>
 
+    {/* ================= STACK PANELS ================= */}
+    {(() => {
 
-    {/* STACKED PANELS */}
-    <div className="relative h-[500px]">
+      const panels = [
+        {
+          id: 0,
+          number: "01",
+          title: "Strategy",
+          eyebrow: "We own strategy and execution.",
+          desc: "Adapting to your business problem, choosing the right metrics, and iterating quickly.",
+          image: "Strategy.png",
+          icon: (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3L15 9L21 12L15 15L12 21L9 15L3 12L9 9L12 3Z"
+                stroke="currentColor" strokeWidth="1.5"/>
+            </svg>
+          )
+        },
+        {
+          id: 1,
+          number: "02",
+          title: "Education",
+          eyebrow: "From blueprint to build.",
+          desc: "Architecting scalable systems that transform insight into repeatable performance.",
+          image: "Education.png",
+          icon: (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="4" width="6" height="6"
+                stroke="currentColor" strokeWidth="1.5"/>
+              <rect x="14" y="4" width="6" height="6"
+                stroke="currentColor" strokeWidth="1.5"/>
+              <rect x="9" y="14" width="6" height="6"
+                stroke="currentColor" strokeWidth="1.5"/>
+            </svg>
+          )
+        },
+        {
+          id: 2,
+          number: "03",
+          title: "Growth",
+          eyebrow: "Execution that compounds.",
+          desc: "Shipping, measuring, refining with tight feedback loops.",
+          image: "Growth.png",
+          icon: (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12H19M12 5L19 12L12 19"
+                stroke="currentColor" strokeWidth="1.5"/>
+            </svg>
+          )
+        },
+        {
+          id: 3,
+          number: "04",
+          title: "Operations",
+          eyebrow: "What gets measured evolves.",
+          desc: "Continuous performance tuning grounded in constraints.",
+          image: "Operations.png",
+          icon: (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9"
+                stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M12 7V12L15 15"
+                stroke="currentColor" strokeWidth="1.5"/>
+            </svg>
+          )
+        },
+      ]
 
-      {[4,3,2,1].map((num, i) => {
+      const [activeIndex, setActiveIndex] = useState(0)
 
-        const offset = i * 40;
-        const isFront = num === 1;
+      const total = panels.length
+      const offset = 60
+      const totalOffset = offset * (total - 1)
 
-        return (
-          <div
-            key={num}
-            className="absolute top-0 w-full h-full rounded-3xl overflow-hidden grid grid-cols-12"
-            style={{
-              transform: `translateX(${offset}px)`,
-              zIndex: 20 + i,
-              background: "#121212",
-              border: "1px solid rgba(255,255,255,0.06)",
-              boxShadow: isFront
-                ? "0 60px 160px rgba(0,0,0,0.95)"
-                : "0 30px 80px rgba(0,0,0,0.6)",
-            }}
-          >
+      return (
+        <div className="relative h-[520px] overflow-hidden">
 
-            {/* IMAGE SIDE */}
-            <div className="col-span-12 md:col-span-7 relative">
+          {panels.map((panel, i) => {
 
-              <img
-                src="/hero.jpg"
-                alt=""
-                className="w-full h-full object-cover"
-              />
+            const order = (i - activeIndex + total) % total
+            const indexFromFront = total - 1 - order
+            const isFront = indexFromFront === 0
 
-              {/* Left fade for depth */}
-              <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent" />
+            return (
+              <div
+                key={panel.id}
+                onClick={() => setActiveIndex(i)}
+                className="absolute top-0 right-0 h-full cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                style={{
+                  width: `calc(100% - ${totalOffset}px)`,
+                  transform: `translateX(-${indexFromFront * offset}px)`,
+                  zIndex: 20 + order,
+                }}
+              >
 
-              {/* Number */}
-              <div className="absolute top-6 left-6 text-3xl font-semibold text-white/80 tracking-tight">
-                {String(num).padStart(2, "0")}
+                {/* ===== OUTER FRAME (TIPIS, ELEGAN) ===== */}
+                <div
+                  className="w-full h-full rounded-[30px]"
+                  style={{
+                    background: "#0C0C0C",
+                    padding: "12px",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    boxShadow: isFront
+                      ? "0 18px 50px rgba(0,0,0,0.40)"
+                      : "0 6px 20px rgba(0,0,0,0.22)",
+                  }}
+                >
+
+                  {/* ===== INNER CARD ===== */}
+                  <div className="w-full h-full rounded-[22px] overflow-hidden grid grid-cols-12 bg-[#0F0F0F]">
+
+                    {/* IMAGE SIDE */}
+                    <div className="col-span-7 relative">
+
+                      <img
+                        src={panel.image}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+
+                      <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
+
+                      <div className="absolute top-6 left-6 text-[26px] font-semibold text-white/85">
+                        {panel.number}
+                      </div>
+
+                    </div>
+
+                    {/* CONTENT SIDE */}
+                    <div className="col-span-5 p-14 flex flex-col justify-center bg-[#0F0F0F]">
+
+                      {isFront && (
+                        <>
+                          <div className="text-white/60 text-[15px] mb-6 leading-relaxed">
+                            {panel.eyebrow}
+                          </div>
+
+                          {/* ICON + TITLE */}
+                          <div className="flex items-center gap-4 mb-6">
+                            <div
+                              className="text-[var(--color-primary-600)]"
+                            >
+                              {panel.icon}
+                            </div>
+
+                            <div
+                              className="text-[28px] font-semibold"
+                              style={{ color: "var(--color-primary-600)" }}
+                            >
+                              {panel.title}
+                            </div>
+                          </div>
+
+                          <div className="text-white/70 leading-relaxed text-[16px]">
+                            {panel.desc}
+                          </div>
+                        </>
+                      )}
+
+                    </div>
+
+                  </div>
+                </div>
+
               </div>
+            )
+          })}
 
-            </div>
+        </div>
+      )
 
-
-            {/* RIGHT CONTENT (ONLY FRONT PANEL) */}
-            <div className="col-span-12 md:col-span-5 p-14 flex flex-col justify-center">
-
-              {isFront && (
-                <>
-                  <div className="mb-6 text-white/60 leading-relaxed">
-                    We own strategy and execution.
-                    You bring the goal, we build the system.
-                  </div>
-
-                  <div
-                    className="text-2xl font-semibold mb-6"
-                    style={{ color: "var(--color-primary-600)" }}
-                  >
-                    Strategy
-                  </div>
-
-                  <div className="text-white/70 leading-relaxed">
-                    Adapting to your business problem,
-                    choosing right metrics, and iterating
-                    quickly based on what we learn.
-                  </div>
-                </>
-              )}
-
-            </div>
-
-          </div>
-        );
-      })}
-
-    </div>
+    })()}
 
   </div>
-
 </section>
 
 
