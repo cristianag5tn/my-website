@@ -9,7 +9,131 @@ import Stack from "@/components/layout/Stack";
 import Block from "@/components/layout/Block";
 import Typography from "@/components/Typography";
 
+/* ================= PARTNER CARD COMPONENT ================= */
+
+type PartnerCardProps = {
+  image: string
+  metricLeft: string
+  metricLeftLabel: string
+  metricRight: string
+  metricRightLabel: string
+  logo: string
+  title: string
+  desc: string
+}
+
+function PartnerCard({
+  image,
+  metricLeft,
+  metricLeftLabel,
+  metricRight,
+  metricRightLabel,
+  logo,
+  title,
+  desc,
+}: PartnerCardProps) {
+  return (
+    <div className="relative rounded-[32px] overflow-hidden h-[420px]">
+
+      {/* IMAGE TOP */}
+      <div className="relative h-[62%]">
+
+        <img
+          src={image}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover brightness-[0.72]"
+        />
+
+        {/* subtle dark wash */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-transparent" />
+
+        {/* METRICS */}
+        <div className="relative z-10 p-10 pr-14 flex justify-between">
+
+          <div className="max-w-[220px]">
+            <div className="text-[42px] font-semibold text-white tracking-tight">
+              {metricLeft}
+            </div>
+            <div className="text-[13px] text-white/70 mt-3 leading-snug">
+              {metricLeftLabel}
+            </div>
+          </div>
+
+          <div className="max-w-[160px] text-right">
+            <div className="text-[28px] font-semibold text-white">
+              {metricRight}
+            </div>
+            <div className="text-[13px] text-white/70 mt-3 leading-snug">
+              {metricRightLabel}
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* BOTTOM GLASS PANEL */}
+      <div className="relative h-[38%] bg-black/60 backdrop-blur-xl border-t border-white/5 p-10 flex flex-col justify-center">
+
+        <div className="flex items-center gap-4 mb-4">
+
+          {/* horizontal logo */}
+          <div className="px-5 py-2 bg-white/10 rounded-md text-[11px] text-white/80 tracking-wide">
+            {logo}
+          </div>
+
+          <div className="flex items-center gap-2 text-white font-semibold text-[20px]">
+            {title}
+            <span className="text-white/50 text-[22px]">›</span>
+          </div>
+
+        </div>
+
+        <div className="text-white/60 text-[14px] leading-relaxed max-w-[85%]">
+          {desc}
+        </div>
+
+      </div>
+
+    </div>
+  )
+}
+
+/* ================= SECTION DIVIDER ================= */
+
+function SectionDivider() {
+  return (
+    <div className="w-full flex justify-center py-20">
+      <div className="w-full max-w-[1200px] h-px bg-white/5" />
+    </div>
+  )
+}
+
+function SectionDividerWithCurve() {
+  return (
+    <div className="relative py-29">
+      <div className="w-full max-w-[1200px] mx-auto h-px bg-white/5" />
+
+      <svg
+        className="absolute left-1/2 -translate-x-1/2 top-0 pointer-events-none opacity-60"
+        width="1180"
+        height="320"
+        viewBox="0 0 1400 220"
+        fill="none"
+      >
+        <path
+          d="M0 180 C 350 20, 1050 20, 1400 180"
+          stroke="rgba(255,255,255,0.08)"
+          strokeWidth="1"
+        />
+      </svg>
+    </div>
+  )
+}
+
+/* ================= HOME ================= */
+
 export default function Home() {
+
   return (
     <main className="text-white">
 
@@ -182,7 +306,7 @@ export default function Home() {
       >
 
         <Container>
-          <Stack gap={160}>
+          <Stack gap={40}>
 
             {/* ================= PRODUCT ACTIVATION ================= */}
 <Columns cols={2} gap={140} className="items-center relative">
@@ -257,6 +381,7 @@ export default function Home() {
   </Stack>
 
 </Columns>
+<SectionDivider />
 
 
 {/* ================= DEVELOPER ADOPTION ================= */}
@@ -331,6 +456,7 @@ export default function Home() {
   </div>
 
 </Columns>
+<SectionDivider />
 
 
 {/* ================= GO TO MARKET ================= */}
@@ -400,6 +526,7 @@ export default function Home() {
   </Stack>
 
 </Columns>
+<SectionDivider />
 
 
 {/* ================= TALENT NETWORK ================= */}
@@ -470,13 +597,15 @@ export default function Home() {
 
 </Columns>
 
+<SectionDividerWithCurve />
+
           </Stack>
         </Container>
       </Section>
 
 
             {/* ================= EXPERIENCES ORNAMENTAL ================= */}
-<section className="relative py-40 bg-[var(--color-surface-900)] overflow-hidden">
+<section className="relative py-16 bg-[var(--color-surface-900)] overflow-hidden">
 
   {/* soft top blend */}
   <div className="absolute top-0 left-0 right-0 h-32 
@@ -786,7 +915,7 @@ export default function Home() {
 
 
 {/* ================= FULL STACK / MODULAR ================= */}
-<section className="relative py-36 bg-[var(--color-surface-900)] overflow-hidden">
+<section className="relative py-16 bg-[var(--color-surface-900)] overflow-hidden">
 
   <div className="max-w-[1100px] mx-auto px-6">
 
@@ -985,16 +1114,17 @@ export default function Home() {
 
   </div>
 </section>
+<SectionDivider />
 
 
 {/* ================= PARTNER IMPACT ================= */}
-<section className="relative py-32 bg-[var(--color-surface-900)]">
+<section className="relative py-8 bg-[var(--color-surface-900)]">
 
-  <div className="max-w-[1100px] mx-auto px-6">
+  <div className="max-w-[1120px] mx-auto px-4">
 
-    {/* Heading */}
-    <div className="text-center mb-16">
-      <h2 className="text-4xl md:text-5xl font-semibold leading-tight">
+    {/* HEADING */}
+    <div className="text-center mb-14">
+      <h2 className="text-[38px] md:text-[46px] font-medium leading-[1.1] text-white/90">
         <span style={{ color: "var(--color-primary-600)" }}>
           What We've Built
         </span>{" "}
@@ -1002,219 +1132,239 @@ export default function Home() {
       </h2>
     </div>
 
-    {/* GRID */}
     <div className="grid md:grid-cols-2 gap-6">
 
-      {/* CARD 1 */}
-      <div className="relative rounded-3xl overflow-hidden h-[360px]">
+      {[
+        {
+          img: "Uniswap.jpg",
+          number: "$2T",
+          descLeft: "Powering a protocol securing all-time trading volume",
+          descRight: "Ecosystem program focused on Uniswap Hooks",
+          logo: "Uniswap.svg",
+          title: "Uniswap Hook Incubator",
+          bottom: "End-to-end strategy, curriculum, and execution supporting builders at protocol scale."
+        },
+        {
+          img: "Learn.jpg",
+          number: "1st",
+          descLeft: "Ecosystem program",
+          descRight: "Open learning adoption",
+          logo: "Learn.svg",
+          title: "Learn Prompting",
+          bottom: "From open guide to scalable learning system."
+        },
+        {
+          img: "LevelUp.jpg",
+          number: "$2T",
+          descLeft: "Trading volume secured",
+          descRight: "Talent acceleration",
+          logo: "LevelUp.svg",
+          title: "LevelUp Academy",
+          bottom: "A system for developing talent from the inside."
+        },
+        {
+          img: "GTM.jpg",
+          number: "1st",
+          descLeft: "Builders shipping production",
+          descRight: "Execution framework",
+          logo: "Learn.svg",
+          title: "GTM Engineer Foundations",
+          bottom: "Where technical skill meets go-to-market execution."
+        }
+      ].map((card, i) => (
+        <div key={i} className="relative h-[360px] rounded-[26px] overflow-hidden">
 
-        {/* Background */}
-        <img
-          src="/hero.jpg"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+          <img
+            src={card.img}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover brightness-[0.45]"
+          />
 
-        {/* Top subtle dark */}
-        <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-transparent" />
 
-        {/* BOTTOM SOLID PANEL */}
-        <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-black/90 backdrop-blur-sm" />
+          {/* ================= TOP AREA ================= */}
+          <div className="absolute top-0 left-0 right-0 px-10 pt-8 h-[135px] z-10 flex">
 
-        {/* Content */}
-        <div className="relative h-full p-8 flex flex-col justify-between">
+            {/* LEFT COLUMN */}
+            <div className="w-1/2 flex flex-col justify-between">
 
-          <div className="flex gap-10 text-white/80 font-semibold text-xl">
-            <div>
-              $2T
-              <div className="text-xs text-white/50 mt-2">
-                Protocol trading volume
+              <div className="flex items-center h-[70px]">
+                <div className="text-[32px] font-semibold text-white">
+                  {card.number}
+                </div>
               </div>
-            </div>
-            <div>
-              1st
-              <div className="text-xs text-white/50 mt-2">
-                Ecosystem on Uniswap Hooks
+
+              <div className="h-[36px] text-[12px] font-light text-white/60 leading-snug">
+                {card.descLeft}
               </div>
+
             </div>
+
+            {/* RIGHT COLUMN */}
+            <div className="w-1/2 flex flex-col justify-between">
+
+              <div className="flex items-center h-[70px]">
+                <div className="text-[14px] font-semibold leading-[1.25] text-white">
+                  Builders<br/>shipping<br/>production
+                </div>
+              </div>
+
+              <div className="h-[36px] text-[12px] font-light text-white/60 leading-snug">
+                {card.descRight}
+              </div>
+
+            </div>
+
           </div>
 
-          <div>
-            <div className="text-xl font-semibold mb-3">
-              Uniswap Hook Incubator
+          {/* ================= BOTTOM ================= */}
+          <div className="absolute bottom-0 left-0 right-0 h-[32%] bg-gradient-to-b from-transparent via-black/85 to-black/95 backdrop-blur-sm">
+
+            <div className="h-full px-10 pt-4 pb-4 flex flex-col justify-start">
+
+              <div className="flex items-center gap-3 mb-2">
+                <img
+                  src={card.logo}
+                  alt=""
+                  className="h-5 w-auto object-contain opacity-90"
+                />
+                <div className="flex items-center gap-2 text-white text-[14px] font-medium">
+                  {card.title}
+                  <span className="text-white/60 text-[14px]">›</span>
+                </div>
+              </div>
+
+              <div className="text-white/65 text-[13px] font-light leading-relaxed max-w-[80%]">
+                {card.bottom}
+              </div>
+
             </div>
 
-            <div className="text-white/60 mb-4 text-sm leading-relaxed">
-              End-to-end strategy, curriculum, and execution
-              supporting builders at protocol scale.
-            </div>
-
-            <div
-              className="text-sm font-medium"
-              style={{ color: "var(--color-primary-600)" }}
-            >
-              Learn More →
-            </div>
           </div>
 
         </div>
-      </div>
-
-
-      {/* CARD 2 */}
-      <div className="relative rounded-3xl overflow-hidden h-[360px]">
-
-        <img
-          src="/hero.jpg"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-black/90 backdrop-blur-sm" />
-
-        <div className="relative h-full p-8 flex flex-col justify-between">
-
-          <div className="text-white/80 text-2xl font-semibold">
-            1st
-          </div>
-
-          <div>
-            <div className="text-xl font-semibold mb-3">
-              Learn Prompting
-            </div>
-            <div className="text-white/60 text-sm">
-              From open guide to scalable learning system.
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-
-      {/* CARD 3 */}
-      <div className="relative rounded-3xl overflow-hidden h-[360px]">
-
-        <img
-          src="/hero.jpg"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-black/90 backdrop-blur-sm" />
-
-        <div className="relative h-full p-8 flex flex-col justify-end">
-
-          <div className="text-xl font-semibold mb-3">
-            LevelUp Academy
-          </div>
-          <div className="text-white/60 text-sm">
-            A system for developing talent internally.
-          </div>
-
-        </div>
-      </div>
-
-
-      {/* CARD 4 */}
-      <div className="relative rounded-3xl overflow-hidden h-[360px]">
-
-        <img
-          src="/hero.jpg"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-black/90 backdrop-blur-sm" />
-
-        <div className="relative h-full p-8 flex flex-col justify-end">
-
-          <div className="text-xl font-semibold mb-3">
-            GTM Engineer Foundations
-          </div>
-          <div className="text-white/60 text-sm">
-            Where technical skill meets go-to-market execution.
-          </div>
-
-        </div>
-      </div>
+      ))}
 
     </div>
-
   </div>
-
 </section>
 
 
-      {/* ================= FINAL CTA ================= */}
-<section className="relative py-56 overflow-hidden">
+      {/* ================= FINAL CTA + FOOTER ================= */}
+<section className="relative bg-[var(--color-surface-900)] overflow-hidden">
 
-  {/* Background Image */}
+  {/* ================= BACKGROUND ================= */}
   <div className="absolute inset-0">
     <img
-      src="/hero.jpg"
+      src="CTA_Background.jpg"
       alt=""
-      className="w-full h-full object-cover scale-110 opacity-70"
+      className="w-full h-full object-cover"
     />
   </div>
 
-  {/* Dark Edge Vignette (lighter center) */}
+  {/* ULTRA SMOOTH TOP BLEND */}
+<div
+  className="absolute top-0 left-0 right-0 h-[650px] pointer-events-none"
+  style={{
+    background: `
+      linear-gradient(
+        to bottom,
+        var(--color-surface-900) 0%,
+        var(--color-surface-900) 15%,
+        rgba(15,15,15,0.95) 30%,
+        rgba(15,15,15,0.85) 45%,
+        rgba(15,15,15,0.65) 60%,
+        rgba(15,15,15,0.40) 75%,
+        rgba(15,15,15,0.20) 85%,
+        transparent 100%
+      )
+    `
+  }}
+/>
+
+  {/* SUBTLE EDGE VIGNETTE */}
   <div
-    className="absolute inset-0"
+    className="absolute inset-0 pointer-events-none"
     style={{
       background:
-        "radial-gradient(circle at 50% 45%, rgba(0,0,0,0.55), rgba(0,0,0,0.9))",
+        "radial-gradient(circle at 50% 40%, rgba(0,0,0,0.35), rgba(0,0,0,0.85))"
     }}
   />
 
-  {/* Top Blend from Previous Section */}
-  <div
-    className="absolute top-0 left-0 right-0 h-40 pointer-events-none"
-    style={{
-      background:
-        "linear-gradient(to bottom, var(--color-surface-900), transparent)",
-    }}
-  />
+  {/* ================= CTA CONTENT ================= */}
+  <div className="relative z-10 min-h-[1150px] flex flex-col items-center justify-center text-center px-6">
 
-  <div className="relative z-10 max-w-[1100px] mx-auto px-6 text-center">
-    <div className="max-w-[900px] mx-auto flex flex-col gap-16">
+    <h2 className="text-[48px] md:text-[56px] font-semibold text-white tracking-tight">
+      Build something meaningful together.
+    </h2>
 
-      <h2 className="text-4xl md:text-6xl font-semibold leading-tight">
-        Build Something That
-        <br />
-        <span style={{ color: "var(--color-primary-600)" }}>
-          Actually Moves People
-        </span>
-      </h2>
+    {/* CTA BUTTON */}
+    <div className="mt-14">
 
-      <p
-        style={{
-          color: "var(--color-foreground-70)",
-          maxWidth: "600px",
-          margin: "0 auto",
-        }}
-      >
-        Let’s design an education experience that changes how people think,
-        work, and grow.
-      </p>
+      <div className="relative inline-block group">
 
-      <div>
+        {/* Bottom slab */}
+        <div className="absolute inset-0 translate-x-[4px] translate-y-[4px] rounded-xl bg-[#0E7A52]" />
+
+        {/* Main surface */}
         <div
-          className="px-14 py-6 rounded-2xl font-semibold inline-block transition-all duration-300"
+          className="
+            relative
+            px-10 py-4
+            rounded-xl
+            text-sm font-semibold
+            transition-all duration-150
+            group-hover:translate-x-[1px]
+            group-hover:translate-y-[1px]
+          "
           style={{
-            background: "var(--color-primary-600)",
-            color: "black",
-            boxShadow: "0 30px 90px rgba(0,0,0,0.7)",
+            background: "#BFF3DA",
+            color: "#0F0F0F",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.35)"
           }}
         >
-          Start a Conversation
+          Work with us
         </div>
+
       </div>
 
     </div>
+
   </div>
+
+  {/* ================= LARGE ATRIUM LOGO ================= */}
+  <div className="absolute bottom-40 left-1/2 -translate-x-1/2 z-10 pointer-events-none opacity-[10]">
+
+    <img
+      src="Atrium_Big.png"
+      alt=""
+      className="w-[1180px] max-w-[95vw] object-contain"
+    />
+
+  </div>
+
+  {/* ================= FOOTER ================= */}
+  <div className="relative z-20 bg-black/85 border-t border-white/10">
+
+    <div className="max-w-[1200px] mx-auto px-6 py-6 flex justify-between items-center text-sm text-white/60">
+
+      <div>
+        © Atrium 2026. All right reserved
+      </div>
+
+      <div className="flex gap-10">
+        <a href="#" className="hover:text-white transition">
+          Twitter
+        </a>
+        <a href="#" className="hover:text-white transition">
+          View Programs
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+
 </section>
 
     </main>
