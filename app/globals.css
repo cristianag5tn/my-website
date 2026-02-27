@@ -5,7 +5,7 @@
 ========================= */
 
 @theme {
-  --color-background-900: #0A0B08;
+  --color-background-900: #0D0D0C;
 
   --color-foreground-50: #ffffff;
   --color-foreground-300: #dcdcdc;
@@ -15,7 +15,7 @@
   --color-primary-300: #30f3af;
   --color-primary-100: #bbfadd;
 
-  --color-surface-900: #171914;
+  --color-surface-900: #0F100E;
   --color-surface-800: #373934;
 }
 
