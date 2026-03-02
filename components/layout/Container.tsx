@@ -6,13 +6,7 @@ type ContainerProps = {
 
 export default function Container({ children }: ContainerProps) {
   return (
-    <div
-      style={{
-        maxWidth: "1200px",
-        margin: "0 auto",
-        padding: "0 40px",
-      }}
-    >
+    <div className="max-w-300 mx-auto px-5 md:px-10">
       {children}
     </div>
   );
