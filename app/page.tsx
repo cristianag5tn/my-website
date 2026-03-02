@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 
 import Section from "@/components/layout/Section";
 import Container from "@/components/layout/Container";
@@ -129,7 +129,7 @@ function SectionDivider() {
 
 function SectionDividerWithCurve() {
   return (
-    <div className="relative py-29">
+    <div className="relative py-29 z-10">
       <div className="max-w-[1200px] mx-auto px-10">
         <div className="h-px bg-white/5" />
       </div>
@@ -151,6 +151,50 @@ function SectionDividerWithCurve() {
   )
 }
 
+/* ================= SCROLL REVEAL ================= */
+
+function useInView(threshold = 0.12) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [inView, setInView] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setInView(true); obs.disconnect() } },
+      { threshold }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
+  return [ref, inView] as const
+}
+
+function Reveal({
+  children,
+  delay = 0,
+  y = 24,
+  className = "",
+  style: sx,
+}: {
+  children: React.ReactNode
+  delay?: number
+  y?: number
+  className?: string
+  style?: React.CSSProperties
+}) {
+  const [ref, inView] = useInView()
+  return (
+    <div ref={ref} className={className} style={{
+      opacity: inView ? 1 : 0,
+      transform: inView ? "none" : `translateY(${y}px)`,
+      transition: `opacity 0.75s cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 0.75s cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
+      ...sx,
+    }}>
+      {children}
+    </div>
+  )
+}
+
 /* ================= HOME ================= */
 
 export default function Home() {
@@ -163,11 +207,15 @@ export default function Home() {
 
         {/* Background */}
         <div className="absolute inset-0">
-          <img
-            src="/hero.jpg"
-            alt=""
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
             className="w-full h-full object-cover scale-[1.05] brightness-100 contrast-90"
-          />
+          >
+            <source src="hero.mp4" type="video/mp4" />
+          </video>
         </div>
 
         {/* TOP FADE */}
@@ -308,12 +356,21 @@ export default function Home() {
 
 
       {/* ================= CONTENT ================= */}
-      <Section className="border-t border-white/5 relative bg-background-900">
+      <Section className="border-t border-white/5 relative bg-background-900 pb-4">
 
         <Container>
-          <Stack gap={40}>
+          <Reveal>
+          <h3 className="text-[32px] font-semibold leading-[1.2] mb-28 text-center">
+            <span className="text-white">We Solve Business Problems</span>
+            {" "}
+            <span style={{ color: "var(--color-primary-600)" }}>Through Education</span>
+          </h3>
+          </Reveal>
+
+          <Stack gap={32}>
 
             {/* ================= PRODUCT ACTIVATION ================= */}
+            <Reveal>
             <Columns cols={2} gap={140} className="items-center relative">
 
               {/* IMAGE SIDE */}
@@ -330,18 +387,18 @@ export default function Home() {
 
                 {/* Floating Card */}
                 <div
-                  className="absolute left-0 w-[360px] max-w-[90%] p-6 rounded-2xl backdrop-blur-md bg-surface-900 border border-white/[0.06] shadow-[0_40px_100px_rgba(0,0,0,0.8)]"
+                  className="absolute left-10 w-[360px] max-w-[90%] p-4 rounded-2xl backdrop-blur-md bg-surface-900 border border-white/[0.06] shadow-[0_40px_100px_rgba(0,0,0,0.8)]"
                   style={{
                     top: "0",
                     transform: "translate(-20%, -20%)",
                   }}
                 >
                   <div className="flex items-center gap-5">
-                    <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+                    <div className="w-20 h-24 rounded-xl overflow-hidden flex-shrink-0">
                       <img src="Product_Activation.jpg" alt="" className="w-full h-full object-cover" />
                     </div>
 
-                    <div className="text-[17px] text-white/85 leading-relaxed">
+                    <div className="--font-body-2 text-white/85 leading-relaxed">
                       Software company with a complex product that needs customer
                       education driving actual usage
                     </div>
@@ -351,42 +408,48 @@ export default function Home() {
               </div>
 
               {/* TEXT SIDE */}
-              <Stack gap={24}>
+              <Stack gap={140}>
                 <div className="flex items-start gap-3 text-[15px] text-white/60 leading-relaxed">
                   <span className="w-2 h-2 mt-2 rounded-full flex-shrink-0" style={{ background: "var(--color-primary-600)" }} />
                   You've built something powerful, but users don't reach the "aha"
                   moment fast enough to stick.
                 </div>
 
+                <Stack gap={16}>
                 <Typography variant="h3" className="font-semibold">Product Activation</Typography>
 
                 <Typography variant="body-2" className="text-white/70 leading-relaxed">
                   Create structured education pipelines that guide users from onboarding
                   to mastery—driving real adoption, retention, and measurable growth.
                 </Typography>
+                </Stack>
               </Stack>
 
             </Columns>
+            </Reveal>
             <SectionDivider />
 
 
             {/* ================= DEVELOPER ADOPTION ================= */}
+            <Reveal>
             <Columns cols={2} gap={140} className="items-center relative">
 
               {/* TEXT SIDE */}
-              <Stack gap={24}>
+              <Stack gap={140}>
                 <div className="flex items-start gap-3 text-[15px] text-white/60 leading-relaxed">
                   <span className="w-2 h-2 mt-2 rounded-full flex-shrink-0" style={{ background: "var(--color-primary-600)" }} />
                   Developers are interested, but learning curves and unclear entry
                   points stop real building from happening.
                 </div>
 
+                <Stack gap={16}>
                 <Typography variant="h3" className="font-semibold">Developer Adoption</Typography>
 
                 <Typography variant="body-2" className="text-white/70 leading-relaxed">
                   Design educational journeys that reduce friction, accelerate onboarding,
                   and transform curiosity into active builders and ecosystem growth.
                 </Typography>
+                </Stack>
               </Stack>
 
               {/* IMAGE SIDE */}
@@ -403,14 +466,14 @@ export default function Home() {
 
                 {/* Floating Card */}
                 <div
-                  className="absolute right-0 w-[360px] max-w-[90%] p-6 rounded-2xl backdrop-blur-md bg-surface-900 border border-white/[0.06] shadow-[0_40px_120px_rgba(0,0,0,0.85)]"
+                  className="absolute right-10 w-[360px] max-w-[90%] p-6 rounded-2xl backdrop-blur-md bg-surface-900 border border-white/[0.06] shadow-[0_40px_120px_rgba(0,0,0,0.85)]"
                   style={{
                     bottom: "0",
                     transform: "translate(20%, 20%)",
                   }}
                 >
                   <div className="flex items-center gap-5">
-                    <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+                    <div className="w-20 h-24 rounded-xl overflow-hidden flex-shrink-0">
                       <img src="Developer_Adoption.jpg" alt="" className="w-full h-full object-cover" />
                     </div>
 
@@ -423,10 +486,12 @@ export default function Home() {
               </div>
 
             </Columns>
+            </Reveal>
             <SectionDivider />
 
 
             {/* ================= GO TO MARKET ================= */}
+            <Reveal>
             <Columns cols={2} gap={140} className="items-center relative">
 
               {/* IMAGE SIDE */}
@@ -446,7 +511,7 @@ export default function Home() {
                   }}
                 >
                   <div className="flex items-center gap-5">
-                    <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+                    <div className="w-20 h-24 rounded-xl overflow-hidden flex-shrink-0">
                       <img src="Go-To-Market.jpg" alt="" className="w-full h-full object-cover" />
                     </div>
 
@@ -459,42 +524,48 @@ export default function Home() {
               </div>
 
               {/* TEXT SIDE */}
-              <Stack gap={24}>
+              <Stack gap={140}>
                 <div className="flex items-start gap-3 text-[15px] text-white/60 leading-relaxed">
                   <span className="w-2 h-2 mt-2 rounded-full flex-shrink-0" style={{ background: "var(--color-primary-600)" }} />
                   You're launching something valuable, but education isn't converting
                   attention into sustained growth.
                 </div>
 
+                <Stack gap={16}>
                 <Typography variant="h3" className="font-semibold">Go-To-Market</Typography>
 
                 <Typography variant="body-2" className="text-white/70 leading-relaxed">
                   Use education as a growth engine—aligning launch strategy, adoption,
                   and long-term market expansion.
                 </Typography>
+                </Stack>
               </Stack>
 
             </Columns>
+            </Reveal>
             <SectionDivider />
 
 
             {/* ================= TALENT NETWORK ================= */}
+            <Reveal>
             <Columns cols={2} gap={140} className="items-center relative">
 
               {/* TEXT SIDE */}
-              <Stack gap={24}>
+              <Stack gap={140}>
                 <div className="flex items-start gap-3 text-[15px] text-white/60 leading-relaxed">
                   <span className="w-2 h-2 mt-2 rounded-full flex-shrink-0" style={{ background: "var(--color-primary-600)" }} />
                   You need founders, operators, or builders—but there's no scalable
                   way to find, train, and surface the right ones.
                 </div>
 
+                <Stack gap={16}>
                 <Typography variant="h3" className="font-semibold">Talent Network</Typography>
 
                 <Typography variant="body-2" className="text-white/70 leading-relaxed">
                   Build structured ecosystems that connect learning pathways with
                   real-world opportunity and long-term practitioner growth.
                 </Typography>
+                </Stack>
               </Stack>
 
               {/* IMAGE SIDE */}
@@ -507,14 +578,14 @@ export default function Home() {
 
                 {/* Floating Card */}
                 <div
-                  className="absolute right-0 w-[360px] max-w-[90%] p-6 rounded-2xl backdrop-blur-md bg-surface-900 border border-white/[0.06] shadow-[0_40px_100px_rgba(0,0,0,0.8)]"
+                  className="absolute right-10 w-[360px] max-w-[90%] p-6 rounded-2xl backdrop-blur-md bg-surface-900 border border-white/[0.06] shadow-[0_40px_100px_rgba(0,0,0,0.8)]"
                   style={{
                     top: "72%",
                     transform: "translate(20%, -50%)",
                   }}
                 >
                   <div className="flex items-center gap-5">
-                    <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+                    <div className="w-20 h-24 rounded-xl overflow-hidden flex-shrink-0">
                       <img src="Talent_Network.jpg" alt="" className="w-full h-full object-cover" />
                     </div>
 
@@ -527,6 +598,7 @@ export default function Home() {
               </div>
 
             </Columns>
+            </Reveal>
 
             <SectionDividerWithCurve />
 
@@ -572,6 +644,7 @@ export default function Home() {
         <div className="relative z-10 max-w-[1200px] mx-auto px-10 text-center">
 
           {/* Top Chips */}
+          <Reveal>
           <div className="flex justify-center gap-4 flex-wrap mb-12">
             {["Bootcamps", "Workshops", "Courses", "Accelerators"].map((item) => (
               <span
@@ -582,15 +655,19 @@ export default function Home() {
               </span>
             ))}
           </div>
+          </Reveal>
 
           {/* Headline */}
+          <Reveal delay={100}>
           <h2 className="text-[40px] font-bold leading-[1.1] tracking-tight text-white mb-14">
             Experiences we build
             <br />
             with you
           </h2>
+          </Reveal>
 
           {/* Bottom Chips */}
+          <Reveal delay={180}>
           <div className="flex justify-center gap-4 flex-wrap">
             {["Subscriptions", "Communities", "Fellowships"].map((item) => (
               <span
@@ -601,6 +678,7 @@ export default function Home() {
               </span>
             ))}
           </div>
+          </Reveal>
 
         </div>
 
@@ -642,28 +720,49 @@ export default function Home() {
           },
         ]
 
-        const [activeIndex, setActiveIndex] = useState(3)
-
         const total = caseStudies.length
         const offset = 78
         const totalOffset = offset * (total - 1)
 
+        const [activeIndex, setActiveIndex] = useState(0)
+        const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+        const goTo = (index: number) => {
+          setActiveIndex(index)
+          if (intervalRef.current) clearInterval(intervalRef.current)
+          intervalRef.current = setInterval(() => {
+            setActiveIndex(prev => (prev + 1) % total)
+          }, 10000)
+        }
+
+        useEffect(() => {
+          intervalRef.current = setInterval(() => {
+            setActiveIndex(prev => (prev + 1) % total)
+          }, 10000)
+          return () => {
+            if (intervalRef.current) clearInterval(intervalRef.current)
+          }
+        }, [])
+
         return (
 
-          <section className="relative py-40 bg-background-900 overflow-hidden">
+          <section className="relative pt-40 pb-10 bg-background-900 overflow-hidden">
 
-            <div className="max-w-[1280px] mx-auto px-10">
+            <div className="max-w-[1264px] mx-auto px-10">
 
             {/* Heading */}
-            <div className="text-center mb-24 max-w-[760px] mx-auto">
-              <h5 className="text-[20px] font-medium leading-tight text-white/90">
+            <Reveal>
+            <div className="text-center mb-16 max-w-[760px] mx-auto">
+              <h5 className="text-[20px] font-medium leading-normal text-white/90">
                 Category defining programs,
                 <br />
                 built to world-class standards
               </h5>
             </div>
+            </Reveal>
 
             {/* ================= STACK WRAPPER ================= */}
+            <Reveal delay={80} y={20}>
             <div className="relative h-[460px]">
 
               {caseStudies.map((item, i) => {
@@ -675,48 +774,55 @@ export default function Home() {
                 return (
                   <div
                     key={item.id}
-                    onClick={() => setActiveIndex(i)}
-                    className="absolute top-0 right-0 rounded-3xl overflow-hidden grid grid-cols-12 cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] bg-surface-900 border border-white/[0.05]"
+                    onClick={() => goTo(i)}
+                    className="absolute top-0 right-0 rounded-3xl overflow-hidden grid grid-cols-12 cursor-pointer bg-surface-900 border border-white/5"
                     style={{
                       width: `calc(100% - ${totalOffset}px)`,
                       height: "100%",
                       transform: `translateX(-${indexFromFront * offset}px)`,
+                      opacity: 1,
                       zIndex: 10 + order,
-                      boxShadow: isFront ? "0 20px 50px rgba(0,0,0,0.45)" : "none",
+                      boxShadow: isFront
+                        ? "0 24px 64px rgba(0,0,0,0.55), 0 8px 24px rgba(0,0,0,0.3)"
+                        : "0 4px 16px rgba(0,0,0,0.12)",
+                      transition: [
+                        "transform 0.65s cubic-bezier(0.16,1,0.3,1)",
+                        "box-shadow 0.5s ease",
+                      ].join(", "),
+                      willChange: "transform",
                     }}
                   >
 
-                    {/* LEFT COPY */}
-                    <div className="col-span-6 px-14 py-14 flex flex-col justify-center bg-surface-900">
+                    {/* LEFT COPY — identity anchored top, message anchored bottom */}
+                    <div className="col-span-6 px-14 py-9 flex flex-col justify-between bg-surface-900">
 
-                      <div className="text-[15px] text-white/30 mb-6 tracking-[0.25em] uppercase">
+                      {/* TOP: Partner identity */}
+                      <div className="text-[15px] text-white/30 tracking-[0.25em] uppercase">
                         {item.label}
                       </div>
 
-                      <div className="text-[20px] font-semibold mb-5 text-white leading-snug">
-                        {item.title}
-                      </div>
-
-                      <div className="text-[15px] text-white/60 leading-relaxed max-w-[380px]">
-                        {item.desc}
+                      {/* BOTTOM: Core message */}
+                      <div>
+                        <div className="text-[20px] font-semibold mb-4 text-white leading-snug">
+                          {item.title}
+                        </div>
+                        <div className="text-[15px] text-white/60 leading-relaxed">
+                          {item.desc}
+                        </div>
                       </div>
 
                     </div>
 
-                    {/* RIGHT IMAGE */}
-                    <div className="col-span-6 relative p-8 flex items-center bg-surface-900">
+                    {/* RIGHT IMAGE — edge-to-edge, true 50% */}
+                    <div className="col-span-6 relative">
 
-                      <div className="relative w-full h-full rounded-2xl overflow-hidden">
+                      <img
+                        src={item.image}
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
 
-                        <img
-                          src={item.image}
-                          alt=""
-                          className="w-full h-full object-cover"
-                        />
-
-                        <div className="absolute inset-0 bg-linear-to-l from-transparent via-transparent to-surface-900/90" />
-
-                      </div>
+                      <div className="absolute inset-0 bg-linear-to-l from-transparent via-transparent to-surface-900/80" />
 
                     </div>
 
@@ -724,6 +830,45 @@ export default function Home() {
                 )
               })}
 
+            </div>
+            </Reveal>
+
+            {/* ================= LINE NAVIGATION ================= */}
+            <div className="flex justify-center items-center gap-3 mt-8">
+              {caseStudies.map((_, i) => {
+                const isActive = i === activeIndex
+                return (
+                  <button
+                    key={i}
+                    onClick={() => goTo(i)}
+                    aria-label={`Go to slide ${i + 1}`}
+                    style={{
+                      position: "relative",
+                      height: "2px",
+                      width: isActive ? "72px" : "28px",
+                      background: "rgba(255,255,255,0.15)",
+                      border: "none",
+                      padding: 0,
+                      cursor: "pointer",
+                      overflow: "hidden",
+                      transition: "width 0.4s cubic-bezier(0.16,1,0.3,1)",
+                    }}
+                  >
+                    {isActive && (
+                      <div
+                        key={activeIndex}
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          background: "rgba(255,255,255,0.85)",
+                          transformOrigin: "left center",
+                          animation: "indicator-progress 10s linear forwards",
+                        }}
+                      />
+                    )}
+                  </button>
+                )
+              })}
             </div>
 
             </div>{/* /max-w container */}
@@ -734,12 +879,12 @@ export default function Home() {
 
 
       {/* ================= PROGRAM TRANSFORMATION ================= */}
-      <section className="relative py-32 bg-background-900">
+      <section className="relative pt-16 pb-32 bg-background-900">
 
-        <div className="max-w-[1280px] mx-auto px-10">
+        <div className="max-w-[1264px] mx-auto px-10">
 
           {/* IMAGE PANEL */}
-          <div className="relative min-h-[950px] overflow-hidden rounded-b-[24px]">
+          <div className="relative min-h-250 overflow-hidden rounded-b-3xl">
 
             {/* IMAGE */}
             <img
@@ -771,31 +916,37 @@ export default function Home() {
             {/* ================= CONTENT ================= */}
             <div className="relative z-10 pt-28 text-center max-w-[900px] mx-auto">
 
+              <Reveal>
               <div className="text-[15px] text-white/60 mb-3">
                 Programs That Deliver
               </div>
+              </Reveal>
 
+              <Reveal delay={80}>
               <div
                 className="text-[20px] font-medium mb-12"
                 style={{ color: "var(--color-primary-600)" }}
               >
                 Life Changing Transformations
               </div>
+              </Reveal>
 
-              <h3 className="text-[32px] font-semibold leading-[1.4] text-white/90">
+              <Reveal delay={160}>
+              <h2 className="text-[40px] font-reguler leading-[1.4] text-white/90">
                 We don't just optimize for outcomes.
                 <br />
-                <span className="text-white/65 font-medium">
+                <span className="text-white/65 font-reguler">
                   We design programs that change how people see themselves
                   and what they believe they can do next.
                 </span>
-              </h3>
+              </h2>
+              </Reveal>
             </div>
 
             {/* ================= TESTIMONIAL FLOAT ================= */}
-            <div className="absolute bottom-16 left-0 right-0 z-10 overflow-hidden">
+            <div className="absolute bottom-36 left-0 right-0 z-10 overflow-hidden">
 
-              <div className="flex gap-10 px-12 animate-marquee">
+              <div className="flex gap-8 px-12 animate-marquee">
 
                 {[
                   {
@@ -868,23 +1019,27 @@ export default function Home() {
       {/* ================= FULL STACK / MODULAR ================= */}
       <section className="relative py-24 bg-background-900 overflow-hidden">
 
-        <div className="max-w-[1280px] mx-auto px-10">
+        <div className="max-w-[1248px] mx-auto px-8">
 
           {/* ================= TOP TEXT ================= */}
-          <div className="grid md:grid-cols-2 gap-20 mb-24 items-start">
+          <div className="grid md:grid-cols-2 gap-20 mb-16 items-start">
 
-            <h2 className="text-[32px] font-semibold leading-[1.05] text-white/90">
+            <Reveal>
+            <h2 className="text-[32px] font-semibold leading-[1.4] text-white/90">
               Full-stack or Modular.
               <br />
               <span style={{ color: "var(--color-primary-600)" }}>
                 Built Around You.
               </span>
             </h2>
+            </Reveal>
 
+            <Reveal delay={100}>
             <div className="text-[17px] text-white/60 leading-relaxed max-w-[440px]">
               We can own strategy & execution end-to-end OR partner
               with your team on where guidance is most needed.
             </div>
+            </Reveal>
 
           </div>
 
@@ -956,103 +1111,180 @@ export default function Home() {
               },
             ]
 
-            const [activeIndex, setActiveIndex] = useState(0)
-
             const total = panels.length
             const offset = 60
             const totalOffset = offset * (total - 1)
 
+            const [activeIndex, setActiveIndex] = useState(0)
+            const fsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+            const goTo = (index: number) => {
+              setActiveIndex(index)
+              if (fsIntervalRef.current) clearInterval(fsIntervalRef.current)
+              fsIntervalRef.current = setInterval(() => {
+                setActiveIndex(prev => (prev + 1) % total)
+              }, 10000)
+            }
+
+            useEffect(() => {
+              fsIntervalRef.current = setInterval(() => {
+                setActiveIndex(prev => (prev + 1) % total)
+              }, 10000)
+              return () => {
+                if (fsIntervalRef.current) clearInterval(fsIntervalRef.current)
+              }
+            }, [])
+
             return (
-              <div className="relative h-[520px] overflow-hidden">
+              <>
+                <Reveal delay={80} y={20}>
+                <div className="relative h-[520px] overflow-hidden">
 
-                {panels.map((panel, i) => {
+                  {panels.map((panel, i) => {
 
-                  const order = (i - activeIndex + total) % total
-                  const indexFromFront = total - 1 - order
-                  const isFront = indexFromFront === 0
+                    const order = (i - activeIndex + total) % total
+                    const indexFromFront = total - 1 - order
+                    const isFront = indexFromFront === 0
 
-                  return (
-                    <div
-                      key={panel.id}
-                      onClick={() => setActiveIndex(i)}
-                      className="absolute top-0 right-0 h-full cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
-                      style={{
-                        width: `calc(100% - ${totalOffset}px)`,
-                        transform: `translateX(-${indexFromFront * offset}px)`,
-                        zIndex: 20 + order,
-                      }}
-                    >
-
-                      {/* OUTER FRAME */}
+                    return (
                       <div
-                        className="w-full h-full rounded-[30px] bg-surface-900 border border-white/[0.06]"
+                        key={panel.id}
+                        onClick={() => goTo(i)}
+                        className="absolute top-0 right-0 h-full cursor-pointer"
                         style={{
-                          padding: "12px",
-                          boxShadow: isFront
-                            ? "0 18px 50px rgba(0,0,0,0.40)"
-                            : "0 6px 20px rgba(0,0,0,0.22)",
+                          width: `calc(100% - ${totalOffset}px)`,
+                          transform: `translateX(-${indexFromFront * offset}px)`,
+                          zIndex: 20 + order,
+                          transition: "transform 0.65s cubic-bezier(0.16,1,0.3,1)",
+                          willChange: "transform",
                         }}
                       >
 
-                        {/* INNER CARD */}
-                        <div className="w-full h-full rounded-[22px] overflow-hidden grid grid-cols-12 bg-surface-900">
+                        {/* OUTER FRAME */}
+                        <div
+                          className="w-full h-full rounded-[30px] bg-surface-900 border border-white/[0.06]"
+                          style={{
+                            padding: "12px",
+                            boxShadow: isFront
+                              ? "0 18px 50px rgba(0,0,0,0.40)"
+                              : "0 6px 20px rgba(0,0,0,0.22)",
+                            transition: "box-shadow 0.5s ease",
+                          }}
+                        >
 
-                          {/* IMAGE SIDE */}
-                          <div className="col-span-7 relative">
+                          {/* INNER CARD */}
+                          <div className="w-full h-full rounded-[22px] overflow-hidden grid grid-cols-12 bg-surface-900">
 
-                            <img
-                              src={panel.image}
-                              alt=""
-                              className="w-full h-full object-cover"
-                            />
+                            {/* IMAGE SIDE */}
+                            <div className="col-span-7 relative">
 
-                            <div className="absolute inset-0 bg-linear-to-r from-black/60 to-transparent" />
+                              <img
+                                src={panel.image}
+                                alt=""
+                                className="w-full h-full object-cover"
+                              />
 
-                            <div className="absolute top-6 left-6 text-[24px] font-semibold text-white/85">
-                              {panel.number}
+                              <div className="absolute inset-0 bg-linear-to-r from-black/60 to-transparent" />
+
+                              <div className="absolute top-6 left-6 text-[24px] font-semibold text-white/85">
+                                {panel.number}
+                              </div>
+
+                            </div>
+
+                            {/* CONTENT SIDE */}
+                            <div className="col-span-5 px-14 pt-8 pb-8 flex flex-col bg-surface-900">
+
+                              <div
+                                className="flex flex-col justify-between h-full"
+                                style={{
+                                  opacity: isFront ? 1 : 0,
+                                  transition: isFront
+                                    ? "opacity 0.35s cubic-bezier(0.16,1,0.3,1) 0.2s"
+                                    : "opacity 0.12s ease",
+                                  pointerEvents: isFront ? "auto" : "none",
+                                }}
+                              >
+                                <div>
+                                  <div className="text-[15px] text-white/60 leading-relaxed">
+                                    {panel.eyebrow}
+                                  </div>
+
+                                  <div className="h-px bg-white/10 mt-8 -mx-8" />
+                                </div>
+
+                                <div>
+                                  {/* ICON + TITLE */}
+                                  <div className="flex items-center gap-4 mb-6">
+                                    <div className="text-primary-600">
+                                      {panel.icon}
+                                    </div>
+
+                                    <div
+                                      className="text-[24px] font-semibold"
+                                      style={{ color: "var(--color-primary-600)" }}
+                                    >
+                                      {panel.title}
+                                    </div>
+                                  </div>
+
+                                  <div className="text-[17px] text-white/70 leading-relaxed">
+                                    {panel.desc}
+                                  </div>
+                                </div>
+
+                              </div>
+
                             </div>
 
                           </div>
-
-                          {/* CONTENT SIDE */}
-                          <div className="col-span-5 p-14 flex flex-col justify-center bg-surface-900">
-
-                            {isFront && (
-                              <>
-                                <div className="text-[15px] text-white/60 mb-6 leading-relaxed">
-                                  {panel.eyebrow}
-                                </div>
-
-                                {/* ICON + TITLE */}
-                                <div className="flex items-center gap-4 mb-6">
-                                  <div className="text-[var(--color-primary-600)]">
-                                    {panel.icon}
-                                  </div>
-
-                                  <div
-                                    className="text-[24px] font-semibold"
-                                    style={{ color: "var(--color-primary-600)" }}
-                                  >
-                                    {panel.title}
-                                  </div>
-                                </div>
-
-                                <div className="text-[17px] text-white/70 leading-relaxed">
-                                  {panel.desc}
-                                </div>
-                              </>
-                            )}
-
-                          </div>
-
                         </div>
+
                       </div>
+                    )
+                  })}
 
-                    </div>
-                  )
-                })}
+                </div>
+                </Reveal>
 
-              </div>
+                {/* ================= LINE NAVIGATION ================= */}
+                <div className="flex justify-center items-center gap-3 mt-8">
+                  {panels.map((_, i) => {
+                    const isActive = i === activeIndex
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => goTo(i)}
+                        aria-label={`Go to panel ${i + 1}`}
+                        style={{
+                          position: "relative",
+                          height: "2px",
+                          width: isActive ? "72px" : "28px",
+                          background: "rgba(255,255,255,0.15)",
+                          border: "none",
+                          padding: 0,
+                          cursor: "pointer",
+                          overflow: "hidden",
+                          transition: "width 0.4s cubic-bezier(0.16,1,0.3,1)",
+                        }}
+                      >
+                        {isActive && (
+                          <div
+                            key={activeIndex}
+                            style={{
+                              position: "absolute",
+                              inset: 0,
+                              background: "rgba(255,255,255,0.85)",
+                              transformOrigin: "left center",
+                              animation: "indicator-progress 10s linear forwards",
+                            }}
+                          />
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+              </>
             )
 
           })()}
@@ -1063,136 +1295,290 @@ export default function Home() {
 
 
       {/* ================= PARTNER IMPACT ================= */}
-      <section className="relative py-16 bg-background-900">
+      {(() => {
+        const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
-        <div className="max-w-[1200px] mx-auto px-10">
+        const cards = [
+          {
+            img: "Uniswap.jpg",
+            number: "$2T",
+            descLeft: "Powering a protocol securing all-time trading volume",
+            descRight: "Ecosystem program focused on Uniswap Hooks",
+            col3Metric: "12wk",
+            col3Label: "Cohort-based incubator",
+            logo: "Uniswap.svg",
+            title: "Uniswap Hook Incubator",
+            headline: "Ecosystem program focused on Uniswap Hooks",
+            expandedDesc: "End-to-end strategy, curriculum, and execution supporting builders at protocol scale. Designed to produce production-ready Hooks shipped by real teams.",
+            bottom: "End-to-end strategy, curriculum, and execution supporting builders at protocol scale."
+          },
+          {
+            img: "Learn.jpg",
+            number: "1st",
+            descLeft: "Ecosystem program",
+            descRight: "Open learning adoption",
+            col3Metric: "#1",
+            col3Label: "Prompting resource globally",
+            logo: "Learn.svg",
+            title: "Learn Prompting",
+            headline: "From open guide to scalable learning system",
+            expandedDesc: "Transformed a community-driven resource into a structured, scalable curriculum adopted by practitioners and organizations worldwide.",
+            bottom: "From open guide to scalable learning system."
+          },
+          {
+            img: "LevelUp.jpg",
+            number: "$2T",
+            descLeft: "Trading volume secured",
+            descRight: "Talent acceleration",
+            col3Metric: "6mo",
+            col3Label: "Accelerated track",
+            logo: "LevelUp.svg",
+            title: "LevelUp Academy",
+            headline: "A system for developing talent from the inside",
+            expandedDesc: "Built a career acceleration system that identifies high-potential individuals and equips them with the skills to grow within the ecosystem.",
+            bottom: "A system for developing talent from the inside."
+          },
+          {
+            img: "GTM.jpg",
+            number: "1st",
+            descLeft: "Builders shipping production",
+            descRight: "Execution framework",
+            col3Metric: "8wk",
+            col3Label: "Intensive program",
+            logo: "Learn.svg",
+            title: "GTM Engineer Foundations",
+            headline: "Where technical skill meets go-to-market execution",
+            expandedDesc: "A program built for engineers ready to own GTM — combining technical depth with positioning, outreach, and deal execution in one cohesive curriculum.",
+            bottom: "Where technical skill meets go-to-market execution."
+          }
+        ];
 
-          {/* HEADING */}
-          <div className="text-center mb-14">
-            <h3 className="text-[32px] font-semibold leading-[1.1] text-white/90">
-              <span style={{ color: "var(--color-primary-600)" }}>
-                What We've Built
-              </span>{" "}
-              with Our Partners
-            </h3>
-          </div>
+        const rows = [[0, 1], [2, 3]];
 
-          <div className="grid md:grid-cols-2 gap-6">
+        function getState(i: number): "expanded" | "shrunk" | "normal" {
+          if (hoveredCard === null) return "normal";
+          if (i === hoveredCard) return "expanded";
+          const sameRow = Math.floor(i / 2) === Math.floor(hoveredCard / 2);
+          if (sameRow) return "shrunk";
+          return "normal";
+        }
 
-            {[
-              {
-                img: "Uniswap.jpg",
-                number: "$2T",
-                descLeft: "Powering a protocol securing all-time trading volume",
-                descRight: "Ecosystem program focused on Uniswap Hooks",
-                logo: "Uniswap.svg",
-                title: "Uniswap Hook Incubator",
-                bottom: "End-to-end strategy, curriculum, and execution supporting builders at protocol scale."
-              },
-              {
-                img: "Learn.jpg",
-                number: "1st",
-                descLeft: "Ecosystem program",
-                descRight: "Open learning adoption",
-                logo: "Learn.svg",
-                title: "Learn Prompting",
-                bottom: "From open guide to scalable learning system."
-              },
-              {
-                img: "LevelUp.jpg",
-                number: "$2T",
-                descLeft: "Trading volume secured",
-                descRight: "Talent acceleration",
-                logo: "LevelUp.svg",
-                title: "LevelUp Academy",
-                bottom: "A system for developing talent from the inside."
-              },
-              {
-                img: "GTM.jpg",
-                number: "1st",
-                descLeft: "Builders shipping production",
-                descRight: "Execution framework",
-                logo: "Learn.svg",
-                title: "GTM Engineer Foundations",
-                bottom: "Where technical skill meets go-to-market execution."
-              }
-            ].map((card, i) => (
-              <div key={i} className="relative h-[360px] rounded-[26px] overflow-hidden">
+        return (
+          <section className="relative py-16 bg-background-900">
+            <div className="max-w-[1200px] mx-auto px-10">
 
-                <img
-                  src={card.img}
-                  alt=""
-                  className="absolute inset-0 w-full h-full object-cover brightness-[0.45]"
-                />
-
-                <div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/30 to-transparent" />
-
-                {/* ================= TOP AREA ================= */}
-                <div className="absolute top-0 left-0 right-0 px-10 pt-8 h-[135px] z-10 flex">
-
-                  {/* LEFT COLUMN */}
-                  <div className="w-1/2 flex flex-col justify-between">
-
-                    <div className="flex items-center h-[70px]">
-                      <div className="text-[32px] font-semibold text-white">
-                        {card.number}
-                      </div>
-                    </div>
-
-                    <div className="h-[36px] text-[15px] font-light text-white/60 leading-snug">
-                      {card.descLeft}
-                    </div>
-
-                  </div>
-
-                  {/* RIGHT COLUMN */}
-                  <div className="w-1/2 flex flex-col justify-between">
-
-                    <div className="flex items-center h-[70px]">
-                      <div className="text-[15px] font-semibold leading-[1.25] text-white">
-                        Builders<br/>shipping<br/>production
-                      </div>
-                    </div>
-
-                    <div className="h-[36px] text-[15px] font-light text-white/60 leading-snug">
-                      {card.descRight}
-                    </div>
-
-                  </div>
-
-                </div>
-
-                {/* ================= BOTTOM ================= */}
-                <div className="absolute bottom-0 left-0 right-0 h-[32%] bg-linear-to-b from-transparent via-background-900/85 to-background-900 backdrop-blur-sm">
-
-                  <div className="h-full px-10 pt-4 pb-4 flex flex-col justify-start">
-
-                    <div className="flex items-center gap-3 mb-2">
-                      <img
-                        src={card.logo}
-                        alt=""
-                        className="h-5 w-auto object-contain opacity-90"
-                      />
-                      <div className="flex items-center gap-2 text-white text-[15px] font-medium">
-                        {card.title}
-                        <span className="text-white/60 text-[15px]">›</span>
-                      </div>
-                    </div>
-
-                    <div className="text-[15px] text-white/65 font-light leading-relaxed max-w-[80%]">
-                      {card.bottom}
-                    </div>
-
-                  </div>
-
-                </div>
-
+              {/* HEADING */}
+              <Reveal>
+              <div className="text-center mb-14">
+                <h3 className="text-[32px] font-semibold leading-[1.1] text-white/90">
+                  <span style={{ color: "var(--color-primary-600)" }}>
+                    What We've Built
+                  </span>{" "}
+                  with Our Partners
+                </h3>
               </div>
-            ))}
+              </Reveal>
 
-          </div>
-        </div>
-      </section>
+              {/* CARD ROWS */}
+              <div className="flex flex-col gap-8">
+                {rows.map((row, rowIdx) => (
+                  <Reveal key={rowIdx} delay={rowIdx * 100}>
+                  <div className="flex gap-8 items-stretch">
+                    {row.map((i) => {
+                      const card = cards[i];
+                      const state = getState(i);
+                      const isExpanded = state === "expanded";
+                      const isShrunk = state === "shrunk";
+
+                      return (
+                        <div
+                          key={i}
+                          onMouseEnter={() => setHoveredCard(i)}
+                          onMouseLeave={() => setHoveredCard(null)}
+                          className="relative h-[360px] rounded-[24px] overflow-hidden cursor-pointer"
+                          style={{
+                            flex: isExpanded ? 1.65 : isShrunk ? 0.55 : 1,
+                            opacity: hoveredCard !== null && !isExpanded ? 0.55 : 1,
+                            transition: "flex 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.45s cubic-bezier(0.16,1,0.3,1)",
+                            minWidth: 0,
+                            willChange: "flex",
+                          }}
+                        >
+                          {/* BG IMAGE */}
+                          <img
+                            src={card.img}
+                            alt=""
+                            className="absolute inset-0 w-full h-full object-cover brightness-[0.45]"
+                          />
+                          <div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/30 to-transparent" />
+
+                          {/* ================= TOP AREA ================= */}
+                          {/* All 3 cols always in DOM — flex+opacity animated with asymmetric delays */}
+                          <div className="absolute top-0 left-0 right-0 px-10 pt-8 h-[135px] z-10 flex gap-9 overflow-hidden">
+
+                            {/* COL 1 — always visible */}
+                            <div className="flex-1 flex flex-col justify-between" style={{ minWidth: 0 }}>
+                              <div className="flex items-center h-[70px]">
+                                <div className="text-[32px] font-semibold text-white">
+                                  {card.number}
+                                </div>
+                              </div>
+                              <div className="h-[36px] text-[15px] font-light text-white/60 leading-snug">
+                                {card.descLeft}
+                              </div>
+                            </div>
+
+                            {/* COL 2 — collapses when shrunk; fades before collapsing, fades after expanding */}
+                            <div
+                              className="flex flex-col justify-between"
+                              style={{
+                                flex: isShrunk ? 0 : 1,
+                                opacity: isShrunk ? 0 : 1,
+                                overflow: "hidden",
+                                minWidth: 0,
+                                transition: isShrunk
+                                  ? "flex 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.12s ease"
+                                  : "flex 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.35s cubic-bezier(0.16,1,0.3,1) 0.22s",
+                              }}
+                            >
+                              <div className="flex items-center h-[70px]">
+                                <div className="text-[15px] font-semibold text-white" style={{ whiteSpace: "nowrap" }}>
+                                  Builders<br/>shipping<br/>production
+                                </div>
+                              </div>
+                              <div className="h-[36px] text-[15px] font-light text-white/60 leading-snug" style={{ whiteSpace: "nowrap" }}>
+                                {card.descRight}
+                              </div>
+                            </div>
+
+                            {/* COL 3 — expands in; fades before collapsing, fades after expanding */}
+                            <div
+                              className="flex flex-col justify-between"
+                              style={{
+                                flex: isExpanded ? 1 : 0,
+                                opacity: isExpanded ? 1 : 0,
+                                overflow: "hidden",
+                                minWidth: 0,
+                                transition: isExpanded
+                                  ? "flex 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.35s cubic-bezier(0.16,1,0.3,1) 0.22s"
+                                  : "flex 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.12s ease",
+                              }}
+                            >
+                              <div className="flex items-center h-[70px]">
+                                <div className="text-[32px] font-semibold text-white" style={{ whiteSpace: "nowrap" }}>
+                                  {card.col3Metric}
+                                </div>
+                              </div>
+                              <div className="h-[36px] text-[15px] font-light text-white/60 leading-snug" style={{ whiteSpace: "nowrap" }}>
+                                {card.col3Label}
+                              </div>
+                            </div>
+
+                          </div>
+
+                          {/* ================= BOTTOM ================= */}
+                          {/* Both layouts always rendered; crossfade via opacity to avoid layout shift */}
+                          <div className="absolute bottom-0 left-0 right-0 h-[38%] bg-linear-to-b from-transparent via-background-900/85 to-background-900 backdrop-blur-sm">
+                            <div className="relative h-full">
+
+                              {/* DEFAULT / SHRUNK layout */}
+                              <div
+                                className="absolute inset-0 px-10 pt-5 pb-7 flex flex-col justify-start"
+                                style={{
+                                  opacity: isExpanded ? 0 : 1,
+                                  pointerEvents: isExpanded ? "none" : "auto",
+                                  transition: isExpanded
+                                    ? "opacity 0.12s ease"
+                                    : "opacity 0.35s cubic-bezier(0.16,1,0.3,1) 0.22s",
+                                }}
+                              >
+                                <div className="flex items-center gap-3 mb-2">
+                                  <img
+                                    src={card.logo}
+                                    alt=""
+                                    className="h-8 w-auto object-contain opacity-90"
+                                  />
+                                  <div className="flex items-center gap-2 text-white text-[15px] font-medium">
+                                    {card.title}
+                                    <span className="text-white/60 text-[15px]">›</span>
+                                  </div>
+                                </div>
+                                <div className="text-[15px] text-white/65 font-light leading-relaxed max-w-[80%]">
+                                  {card.bottom}
+                                </div>
+                              </div>
+
+                              {/* EXPANDED layout */}
+                              <div
+                                className="absolute inset-0 px-10 pt-5 pb-7 flex gap-6"
+                                style={{
+                                  opacity: isExpanded ? 1 : 0,
+                                  pointerEvents: isExpanded ? "auto" : "none",
+                                  transition: isExpanded
+                                    ? "opacity 0.35s cubic-bezier(0.16,1,0.3,1) 0.22s"
+                                    : "opacity 0.12s ease",
+                                }}
+                              >
+                                <div className="flex flex-col justify-between min-w-0" style={{ flex: 1, paddingRight: "80px" }}>
+                                  <div className="text-[15px] font-normal text-white leading-snug mb-2">
+                                    {card.headline}
+                                  </div>
+                                  <div
+                                    className="text-[13px] text-white/60 font-normal leading-relaxed"
+                                    style={{
+                                      display: "-webkit-box",
+                                      WebkitLineClamp: 4,
+                                      WebkitBoxOrient: "vertical" as const,
+                                      overflow: "hidden",
+                                    }}
+                                  >
+                                    {card.expandedDesc}
+                                  </div>
+                                </div>
+                                <div className="flex flex-col justify-between items-end shrink-0">
+                                  <div className="flex items-center gap-2">
+                                    <img
+                                      src={card.logo}
+                                      alt=""
+                                      className="h-8 w-auto object-contain opacity-90"
+                                    />
+                                    <span className="text-white text-[17px] font-semibold whitespace-nowrap">
+                                      {card.title}
+                                    </span>
+                                  </div>
+                                  <a
+                                    href="#"
+                                    className="group flex items-center gap-1 text-[15px] font-semibold"
+                                    style={{ color: "var(--color-primary-600)" }}
+                                  >
+                                    <span className="underline decoration-transparent group-hover:decoration-current transition-[text-decoration-color] duration-200">
+                                      Learn more
+                                    </span>
+                                    <span
+                                      className="inline-block transition-transform duration-200 group-hover:translate-x-[3px]"
+                                      style={{ opacity: 0.9 }}
+                                    >
+                                      →
+                                    </span>
+                                  </a>
+                                </div>
+                              </div>
+
+                            </div>
+                          </div>
+
+                        </div>
+                      );
+                    })}
+                  </div>
+                  </Reveal>
+                ))}
+              </div>
+
+            </div>
+          </section>
+        );
+      })()}
 
 
       {/* ================= FINAL CTA + FOOTER ================= */}
@@ -1247,11 +1633,14 @@ export default function Home() {
         {/* ================= CTA CONTENT ================= */}
         <div className="relative z-10 min-h-[1150px] flex flex-col items-center justify-center text-center px-10">
 
+          <Reveal>
           <h2 className="text-[40px] font-bold leading-[1.4] text-white tracking-tight">
             Build something meaningful together.
           </h2>
+          </Reveal>
 
           {/* CTA BUTTON */}
+          <Reveal delay={150}>
           <div className="mt-14">
 
             <div className="relative inline-block group">
@@ -1279,6 +1668,7 @@ export default function Home() {
             </div>
 
           </div>
+          </Reveal>
 
         </div>
 
