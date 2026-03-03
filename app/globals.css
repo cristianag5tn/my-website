@@ -11,38 +11,38 @@
   --color-foreground-300: #dcdcdc;
   --color-foreground-500: #999999;
 
-  --color-primary-600: #00d57b;
+  --color-primary-600: #30F3AF;
   --color-primary-300: #30f3af;
   --color-primary-100: #bbfadd;
 
   --color-surface-900: #0F100E;
   --color-surface-800: #373934;
+
+  /* ── Spacing tokens ── */
+  --spacing-section:    6rem;    /* py-section   = 96px  */
+  --spacing-section-lg: 8rem;    /* py-section-lg = 128px */
 }
 
 /* =========================
-   TYPOGRAPHY TOKENS (Global CSS)
+   TYPOGRAPHY TOKENS — fluid via clamp()
 ========================= */
 
 :root {
-  --font-h1: 72px;
-  --font-h2: 40px;
-  --font-h2-bold: 40px;
-  --font-h3: 32px;
-  --font-h3-semibold: 32px;
-  --font-h4: 24px;
-  --font-h5: 20px;
-  --font-h5-regular: 20px;
-  --font-h6: 17px;
-  --font-h6-semibold: 17px;
+  --font-h1:         clamp(36px, 5vw, 72px);
+  --font-h2:         clamp(24px, 3vw, 40px);
+  --font-h3:         clamp(20px, 2.5vw, 32px);
+  --font-h4:         clamp(18px, 2vw, 24px);
+  --font-h5:         clamp(17px, 1.6vw, 20px);
+  --font-h6:         17px;
 
-  --font-subtitle-1: 20px;
+  --font-subtitle-1: clamp(17px, 1.6vw, 20px);
   --font-subtitle-2: 17px;
 
-  --font-body-1: 20px;
-  --font-body-2: 17px;
-  --font-body-3: 15px;
+  --font-body-1:     clamp(16px, 1.4vw, 20px);
+  --font-body-2:     17px;
+  --font-body-3:     15px;
 
-  --font-button: 20px;
+  --font-button:     clamp(15px, 1.2vw, 20px);
 }
 
 @keyframes indicator-progress {
@@ -51,16 +51,22 @@
 }
 
 @keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+  0%   { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
 }
 
 .animate-marquee {
   display: flex;
   width: max-content;
   animation: marquee 35s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+
+  @keyframes indicator-progress {
+    from, to { transform: scaleX(1); }
+  }
 }

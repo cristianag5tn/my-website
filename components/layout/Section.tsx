@@ -12,7 +12,7 @@ export default function Section({
   style,
 }: SectionProps) {
   return (
-    <section className={`w-full py-16 md:py-24 ${className}`} style={style}>
+    <section className={`w-full py-16 md:py-24 2xl:py-28 ${className}`} style={style}>
       {children}
     </section>
   );
